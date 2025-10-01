@@ -1,9 +1,7 @@
-import type { NextConfig } from 'next'
-
 // added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   /* config options here */
 }
 

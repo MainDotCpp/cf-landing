@@ -1,9 +1,9 @@
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { EducationSection } from "@/components/education-section"
-import { MarketAnalysisSection } from "@/components/market-analysis-section"
-import { FeaturesSection } from "@/components/features-section"
-import { Footer } from "@/components/footer"
+import { EducationSection } from '@/components/education-section'
+import { FeaturesSection } from '@/components/features-section'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/home-footer'
+import { HeroSection } from '@/components/home-hero-section'
+import { MarketAnalysisSection } from '@/components/market-analysis-section'
 
 export default function Home() {
   return (

@@ -1,49 +1,55 @@
+import { TrendingUp } from "lucide-react"
+
 export function Footer() {
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <h3 className="font-bold text-lg mb-4">株式投資アカデミー</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              信頼できる株式投資の教育と市場分析を提供するプラットフォーム
+    <footer className="bg-gradient-to-b from-primary to-primary/90 text-primary-foreground py-8 px-4">
+      <div className="max-w-md mx-auto">
+        <div className="space-y-6">
+          <div className="text-center space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              <TrendingUp className="h-6 w-6" />
+              <span className="text-xl font-bold">日本株式推奨</span>
+            </div>
+            <p className="text-sm text-primary-foreground/80 leading-relaxed">
+              プロによる日本株の分析と推奨サービス。毎日更新、完全無料。
             </p>
           </div>
 
-          <div>
-            <h4 className="font-bold mb-4">教育コンテンツ</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="hover:text-primary transition-colors cursor-pointer">株式投資の基礎</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">テクニカル分析</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">ファンダメンタル分析</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">投資戦略</li>
-            </ul>
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div className="bg-white/10 rounded-lg p-4">
+              <h3 className="font-semibold mb-2 text-sm">サービス</h3>
+              <ul className="space-y-1 text-xs text-primary-foreground/80">
+                <li>株式推奨</li>
+                <li>市場分析</li>
+                <li>投資アドバイス</li>
+                <li>毎日更新</li>
+              </ul>
+            </div>
+
+            <div className="bg-white/10 rounded-lg p-4">
+              <h3 className="font-semibold mb-2 text-sm">情報</h3>
+              <ul className="space-y-1 text-xs text-primary-foreground/80">
+                <li>会社概要</li>
+                <li>お問い合わせ</li>
+                <li>プライバシー</li>
+                <li>利用規約</li>
+              </ul>
+            </div>
           </div>
 
-          <div>
-            <h4 className="font-bold mb-4">市場分析</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="hover:text-primary transition-colors cursor-pointer">週間市場展望</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">セクター分析</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">注目銘柄</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">経済指標</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold mb-4">サポート</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="hover:text-primary transition-colors cursor-pointer">よくある質問</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">お問い合わせ</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">利用規約</li>
-              <li className="hover:text-primary transition-colors cursor-pointer">プライバシーポリシー</li>
-            </ul>
+          <div className="text-center bg-white/10 rounded-lg p-4">
+            <h3 className="font-semibold mb-2 text-sm">お問い合わせ</h3>
+            <p className="text-xs text-primary-foreground/80 leading-relaxed">
+              友達追加で毎日の株式推奨と市場分析を受け取れます。
+            </p>
           </div>
         </div>
 
-        <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 株式投資アカデミー. All rights reserved.</p>
-          <p className="mt-2 text-xs">投資にはリスクが伴います。投資判断は自己責任でお願いいたします。</p>
+        <div className="mt-8 pt-6 border-t border-primary-foreground/20 text-center space-y-2">
+          <p className="text-xs text-primary-foreground/60">© 2025 日本株式推奨. All rights reserved.</p>
+          <p className="text-xs text-primary-foreground/60 leading-relaxed">
+            投資にはリスクが伴います。本サービスは参考情報であり、投資助言ではありません。
+          </p>
         </div>
       </div>
     </footer>
