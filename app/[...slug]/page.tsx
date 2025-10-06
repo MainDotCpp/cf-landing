@@ -1,4 +1,3 @@
-// 导入其他页面组件
 import ConfigPage from '@/app/config/ConfigPage'
 import ContactForm from '@/app/contact/ContactForm'
 
@@ -13,6 +12,7 @@ import { MarketAnalysisSection } from '@/components/market-analysis-section'
 import { getCachedUrlConfig } from '@/lib/url-config'
 
 interface PageProps {
+  params: Promise<{ slug: string[] }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
@@ -61,6 +61,27 @@ async function renderPageContent(pageInternal: string) {
                 {' '}
                 <code className="bg-slate-200 px-2 py-1 rounded">{pageInternal}</code>
               </p>
+              <p className="text-sm text-slate-500">
+                请确保该页面存在于以下位置之一：
+              </p>
+              <ul className="text-sm text-slate-500 mt-2 text-left">
+                <li>
+                  •
+                  <code>
+                    /app/
+                    {pagePath}
+                    /page.tsx
+                  </code>
+                </li>
+                <li>
+                  •
+                  <code>
+                    /app/(pages)/(jp)/
+                    {pagePath}
+                    /page.tsx
+                  </code>
+                </li>
+              </ul>
             </div>
           </div>
         )
@@ -84,15 +105,19 @@ async function renderPageContent(pageInternal: string) {
   }
 }
 
-export default async function RootPage({ searchParams }: PageProps) {
-  const params = await searchParams
+export default async function CatchAllPage({ params, searchParams }: PageProps) {
+  const slugParams = await params
+  const queryParams = await searchParams
+
+  // 构建完整路径
+  const fullPath = `/${slugParams.slug?.join('/') || ''}`
 
   // 如果查询参数包含 config=1，显示配置页面
-  if (params.config === '1') {
+  if (queryParams.config === '1') {
     return <ConfigPage />
   }
 
-  const config = await getCachedUrlConfig()
+  const config = await getCachedUrlConfig(fullPath)
 
   // 根据 pageInternal 渲染不同的页面内容
   const pageInternal = config?.pageInternal || '/'

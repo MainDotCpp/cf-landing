@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Footer from "../components/Footer";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "特定商取引法に基づく表記 | 資産運用セミナー",

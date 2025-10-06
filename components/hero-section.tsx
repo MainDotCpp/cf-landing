@@ -1,9 +1,14 @@
+'use client'
+
 import { Sparkles, TrendingUp, Zap } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { useCtaLink } from '@/components/hooks/useCtaLink'
 import StockImage from '@/images/japanese-stock-market-chart-with-rising-trend-and-.jpg'
 
 export function HeroSection() {
+  const primaryLink = useCtaLink('primary', '#')
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-background to-primary/5 py-12 px-4">
       <div className="max-w-md mx-auto">
@@ -24,11 +29,14 @@ export function HeroSection() {
         </p>
 
         <Button
+          asChild
           size="lg"
           className="w-full bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent text-white text-xl font-bold py-7 shadow-xl mb-6"
         >
-          <Zap className="mr-2 h-6 w-6" />
-          今すぐ友達追加
+          <Link href={primaryLink}>
+            <Zap className="mr-2 h-6 w-6" />
+            今すぐ友達追加
+          </Link>
         </Button>
 
         <div className="grid grid-cols-3 gap-3 mb-8">

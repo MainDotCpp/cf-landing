@@ -50,5 +50,15 @@
     "scss",
     "pcss",
     "postcss"
-  ]
+  ],
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "DEV",
+      "database": "${workspaceFolder:cf-landing}/prisma/dev.db",
+      "group": "G"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }

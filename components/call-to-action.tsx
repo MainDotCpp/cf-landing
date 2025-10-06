@@ -1,8 +1,13 @@
+'use client'
+
 import { MessageCircle, TrendingUp, Zap } from 'lucide-react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useCtaLink } from '@/components/hooks/useCtaLink'
 
 export function CallToAction() {
+  const primaryLink = useCtaLink('primary', '#')
   return (
     <section className="py-12 px-4 bg-gradient-to-b from-primary/10 to-accent/10">
       <div className="max-w-md mx-auto">
@@ -23,11 +28,14 @@ export function CallToAction() {
             <div className="p-6 bg-white">
 
               <Button
+                asChild
                 size="lg"
                 className="w-full bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent text-white text-xl font-bold py-7 shadow-xl mb-4"
               >
-                <MessageCircle className="mr-2 h-6 w-6" />
-                今すぐ友達追加
+                <Link href={primaryLink}>
+                  <MessageCircle className="mr-2 h-6 w-6" />
+                  今すぐ友達追加
+                </Link>
               </Button>
 
               <div className="grid grid-cols-3 gap-2 mt-6">
