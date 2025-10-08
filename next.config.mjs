@@ -3,7 +3,7 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 
 const nextConfig = {
   /* config options here */
-  // output: 'standalone', // 取消注释以启用 Docker 部署
+  output: 'standalone', // Docker 部署必需
 }
 
 export default nextConfig

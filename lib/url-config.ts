@@ -1,14 +1,14 @@
-import { headers } from 'next/headers'
 import { unstable_cache } from 'next/cache'
+import { headers } from 'next/headers'
 import { prisma } from './prisma'
 
-export type AnalyticsSnippet = {
+export interface AnalyticsSnippet {
   headHtml?: string
   bodyStartHtml?: string
   bodyEndHtml?: string
 }
 
-export type ResolvedUrlConfig = {
+export interface ResolvedUrlConfig {
   pageInternal: string
   ctas?: Record<'primary' | 'secondary', string | undefined>
   analyticsSnippet?: AnalyticsSnippet
@@ -20,19 +20,20 @@ export function normalizeHost(host: string | null | undefined): string {
 
 export function normalizePath(pathname: string | null | undefined): string {
   const raw = (pathname ?? '/').trim()
-  if (!raw || raw === '/') return '/'
+  if (!raw || raw === '/')
+    return '/'
   const stripped = raw.replace(/\/+$/, '')
   return stripped.length === 0 ? '/' : stripped
 }
 
-export async function getNormalizedHostAndPath(customPath?: string): Promise<{ host: string; path: string }> {
+export async function getNormalizedHostAndPath(customPath?: string): Promise<{ host: string, path: string }> {
   const h = await headers()
   const host = normalizeHost(h.get('x-forwarded-host') ?? h.get('host'))
-  
+
   if (customPath) {
     return { host, path: normalizePath(customPath) }
   }
-  
+
   // Build a URL from headers; query/hash are ignored by design
   const proto = (h.get('x-forwarded-proto') ?? 'https').split(',')[0]
   const nextUrl = h.get('x-invoke-path') ?? h.get('x-original-url') ?? h.get('x-rewrite-url') ?? '/'
@@ -45,7 +46,8 @@ export async function queryUrlConfig(host: string, path: string): Promise<Resolv
   const row = await prisma.urlConfig.findUnique({
     where: { host_path: { host, path } },
   }).catch(() => null)
-  if (!row) return null
+  if (!row)
+    return null
   return {
     pageInternal: row.pageInternal,
     ctas: (row.ctas as any) ?? undefined,
@@ -55,10 +57,11 @@ export async function queryUrlConfig(host: string, path: string): Promise<Resolv
 
 export async function getCachedUrlConfig(customPath?: string): Promise<ResolvedUrlConfig | null> {
   const { host, path } = await getNormalizedHostAndPath(customPath)
-  if (!host) return null
-  
+  if (!host)
+    return null
+
   let config = await queryUrlConfig(host, path)
-  
+
   // 如果配置不存在，创建一个默认配置
   if (!config) {
     try {
@@ -78,13 +81,14 @@ export async function getCachedUrlConfig(customPath?: string): Promise<ResolvedU
           }),
         },
       })
-      
+
       config = {
         pageInternal: newConfig.pageInternal,
         ctas: (newConfig.ctas as any) ?? undefined,
         analyticsSnippet: (newConfig.analyticsSnippet as any) ?? undefined,
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error creating default config:', error)
       // 如果创建失败，返回一个默认配置对象
       return {
@@ -94,8 +98,6 @@ export async function getCachedUrlConfig(customPath?: string): Promise<ResolvedU
       }
     }
   }
-  
+
   return config
 }
-
-

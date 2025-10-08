@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # ========================================
+  # Next.js 应用
+  # ========================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cf-landing-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # 使用宿主机数据库，通过 host.docker.internal 访问
+      - DATABASE_URL=${DATABASE_URL}
+    # 允许访问宿主机服务
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    # 如果需要持久化日志
+    volumes:
+      - ./logs:/app/logs
+

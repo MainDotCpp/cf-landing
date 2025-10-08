@@ -44,5 +44,15 @@ next-env.d.ts
 !.dev.vars.example
 .env*
 !.env.example
+!env.docker.template
 
+# Docker
+.env.docker.prod
+.env.docker.local
+/backups
+/logs
+nginx/certs/*.pem
+nginx/certs/*.key
+
+# Prisma
 /lib/generated/prisma
