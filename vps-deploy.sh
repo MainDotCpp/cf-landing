@@ -35,9 +35,10 @@ echo -e "${BLUE}📥 拉取最新代码...${NC}"
 git fetch origin
 git reset --hard origin/main
 
-# 2. 安装/更新依赖
+# 2. 清理并重新安装依赖（避免跨平台问题）
 echo -e "${BLUE}📦 更新依赖...${NC}"
-npm install
+rm -rf node_modules
+npm install --include=optional
 
 # 3. 生成 Prisma Client
 echo -e "${BLUE}🔧 生成 Prisma Client...${NC}"
