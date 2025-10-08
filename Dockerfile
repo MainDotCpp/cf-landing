@@ -9,10 +9,10 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # 复制依赖文件
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json* ./
 
-# 安装依赖
-RUN npm ci --legacy-peer-deps
+# 安装依赖（使用 install 而非 ci 以避免 lock 文件冲突）
+RUN npm install --legacy-peer-deps
 
 # ========================================
 # Stage 2: 构建应用
