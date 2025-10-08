@@ -1,25 +1,28 @@
 # ========================================
 # Stage 1: 依赖安装
 # ========================================
-FROM node:20-alpine AS deps
-
-# 添加 libc6-compat 以支持某些依赖
-RUN apk add --no-cache libc6-compat
+FROM node:20-slim AS deps
 
 WORKDIR /app
+
+# 安装 OpenSSL（Prisma 需要）
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # 复制依赖文件
 COPY package.json package-lock.json* ./
 
-# 安装依赖（使用 install 而非 ci 以避免 lock 文件冲突）
+# 安装依赖
 RUN npm install --legacy-peer-deps
 
 # ========================================
 # Stage 2: 构建应用
 # ========================================
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
+
+# 安装 OpenSSL
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # 复制依赖
 COPY --from=deps /app/node_modules ./node_modules
@@ -39,9 +42,12 @@ RUN npm run build
 # ========================================
 # Stage 3: 生产运行
 # ========================================
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 
 WORKDIR /app
+
+# 安装 OpenSSL（Prisma 运行时需要）
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # 设置生产环境
 ENV NODE_ENV=production
