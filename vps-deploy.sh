@@ -48,12 +48,12 @@ npx prisma generate
 echo -e "${BLUE}🔨 构建应用...${NC}"
 npm run build
 
-# 5. 重启应用
+# 5. 使用 PM2 重启应用
 echo -e "${BLUE}♻️  重启应用...${NC}"
 if pm2 list | grep -q "$APP_NAME"; then
-    pm2 restart "$APP_NAME"
+    pm2 reload ecosystem.config.js --update-env
 else
-    pm2 start npm --name "$APP_NAME" -- start
+    pm2 start ecosystem.config.js
     pm2 save
 fi
 
