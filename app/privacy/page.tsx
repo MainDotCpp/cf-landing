@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Footer } from "@/components/footer";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー | 資産運用セミナー",
-  description: "個人情報保護方針について",
-};
+  title: 'プライバシーポリシー | 資産運用セミナー',
+  description: '個人情報保護方針について',
+}
 
 export default function PrivacyPage() {
   return (
@@ -13,8 +13,8 @@ export default function PrivacyPage() {
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 md:p-12">
           {/* 返回首页链接 */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center text-indigo-600 hover:text-indigo-700 mb-6 transition-colors"
           >
             <span className="mr-2">←</span>
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
             プライバシーポリシー
           </h1>
-          
+
           <p className="text-sm text-slate-500 mb-8">最終更新日：2025年9月30日</p>
 
           {/* 前言 */}
@@ -123,8 +123,8 @@ export default function PrivacyPage() {
 
           {/* 返回链接 */}
           <div className="mt-12 pt-6 border-t border-slate-200">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="inline-flex items-center text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               <span className="mr-2">←</span>
@@ -133,8 +133,8 @@ export default function PrivacyPage() {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </>
-  );
+  )
 }

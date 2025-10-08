@@ -71,4 +71,3 @@ export function trackFormSubmit(formName: string, success: boolean) {
     success,
   })
 }
-

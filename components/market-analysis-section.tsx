@@ -1,49 +1,49 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react"
+import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const marketData = [
   {
-    name: "日経平均株価",
-    value: "38,450.50",
-    change: "+245.30",
-    percentage: "+0.64%",
-    trend: "up",
+    name: '日経平均株価',
+    value: '38,450.50',
+    change: '+245.30',
+    percentage: '+0.64%',
+    trend: 'up',
   },
   {
-    name: "TOPIX",
-    value: "2,678.90",
-    change: "+18.75",
-    percentage: "+0.70%",
-    trend: "up",
+    name: 'TOPIX',
+    value: '2,678.90',
+    change: '+18.75',
+    percentage: '+0.70%',
+    trend: 'up',
   },
   {
-    name: "マザーズ指数",
-    value: "745.20",
-    change: "-5.40",
-    percentage: "-0.72%",
-    trend: "down",
+    name: 'マザーズ指数',
+    value: '745.20',
+    change: '-5.40',
+    percentage: '-0.72%',
+    trend: 'down',
   },
 ]
 
 const analyses = [
   {
-    title: "今週の市場展望",
-    date: "2025年1月6日",
-    summary: "米国の雇用統計発表を控え、日本市場は慎重な動きが予想されます。半導体関連株に注目が集まっています。",
-    tags: ["市場全体", "週間展望"],
+    title: '今週の市場展望',
+    date: '2025年1月6日',
+    summary: '米国の雇用統計発表を控え、日本市場は慎重な動きが予想されます。半導体関連株に注目が集まっています。',
+    tags: ['市場全体', '週間展望'],
   },
   {
-    title: "テクノロジーセクター分析",
-    date: "2025年1月5日",
-    summary: "AI関連企業の業績好調が続いており、今後も成長が期待されます。特に国内半導体製造装置メーカーに注目。",
-    tags: ["セクター分析", "テクノロジー"],
+    title: 'テクノロジーセクター分析',
+    date: '2025年1月5日',
+    summary: 'AI関連企業の業績好調が続いており、今後も成長が期待されます。特に国内半導体製造装置メーカーに注目。',
+    tags: ['セクター分析', 'テクノロジー'],
   },
   {
-    title: "注目銘柄レポート",
-    date: "2025年1月4日",
-    summary: "自動車関連銘柄の中で、EV部品メーカーの業績が堅調です。中長期的な投資対象として検討価値があります。",
-    tags: ["個別銘柄", "自動車"],
+    title: '注目銘柄レポート',
+    date: '2025年1月4日',
+    summary: '自動車関連銘柄の中で、EV部品メーカーの業績が堅調です。中長期的な投資対象として検討価値があります。',
+    tags: ['個別銘柄', '自動車'],
   },
 ]
 
@@ -68,23 +68,31 @@ export function MarketAnalysisSection() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
-                  {market.trend === "up" ? (
-                    <ArrowUpRight className="h-5 w-5 text-green-600" />
-                  ) : market.trend === "down" ? (
-                    <ArrowDownRight className="h-5 w-5 text-red-600" />
-                  ) : (
-                    <Minus className="h-5 w-5 text-gray-600" />
-                  )}
+                  {market.trend === 'up'
+                    ? (
+                        <ArrowUpRight className="h-5 w-5 text-green-600" />
+                      )
+                    : market.trend === 'down'
+                      ? (
+                          <ArrowDownRight className="h-5 w-5 text-red-600" />
+                        )
+                      : (
+                          <Minus className="h-5 w-5 text-gray-600" />
+                        )}
                   <span
                     className={`text-sm font-bold ${
-                      market.trend === "up"
-                        ? "text-green-600"
-                        : market.trend === "down"
-                          ? "text-red-600"
-                          : "text-gray-600"
+                      market.trend === 'up'
+                        ? 'text-green-600'
+                        : market.trend === 'down'
+                          ? 'text-red-600'
+                          : 'text-gray-600'
                     }`}
                   >
-                    {market.change} ({market.percentage})
+                    {market.change}
+                    {' '}
+                    (
+                    {market.percentage}
+                    )
                   </span>
                 </div>
               </CardContent>

@@ -1,24 +1,24 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Gift, RefreshCw, Rocket } from "lucide-react"
+import { Gift, RefreshCw, Rocket } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 const features = [
   {
     icon: Gift,
-    title: "完全無料",
-    description: "費用は一切不要。すべての株式推奨と分析を無料で提供します。",
-    color: "from-blue-500 to-cyan-500",
+    title: '完全無料',
+    description: '費用は一切不要。すべての株式推奨と分析を無料で提供します。',
+    color: 'from-blue-500 to-cyan-500',
   },
   {
     icon: RefreshCw,
-    title: "毎日更新",
-    description: "プロチームが毎日市場を分析し、最も有望な日本株を厳選します。",
-    color: "from-purple-500 to-pink-500",
+    title: '毎日更新',
+    description: 'プロチームが毎日市場を分析し、最も有望な日本株を厳選します。',
+    color: 'from-purple-500 to-pink-500',
   },
   {
     icon: Rocket,
-    title: "株価急騰のチャンス",
-    description: "友達追加するだけで、株価急騰の可能性がある銘柄情報をゲット！",
-    color: "from-orange-500 to-red-500",
+    title: '株価急騰のチャンス',
+    description: '友達追加するだけで、株価急騰の可能性がある銘柄情報をゲット！',
+    color: 'from-orange-500 to-red-500',
   },
 ]
 

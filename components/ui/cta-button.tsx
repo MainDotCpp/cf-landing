@@ -1,8 +1,7 @@
-import { trackCtaClick } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
-import type { ButtonProps } from '@/components/ui/button'
+import { trackCtaClick } from '@/lib/analytics'
 
-interface CtaButtonProps extends Omit<ButtonProps, 'onClick'> {
+interface CtaButtonProps extends Omit<any, 'onClick'> {
   href: string
   ctaType?: 'primary' | 'secondary'
   label?: string
@@ -53,4 +52,3 @@ export function CtaButton({
     </Button>
   )
 }
-

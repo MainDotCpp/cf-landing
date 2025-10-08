@@ -1,30 +1,30 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, BarChart3, LineChart, TrendingUp } from "lucide-react"
+import { BarChart3, BookOpen, LineChart, TrendingUp } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const courses = [
   {
     icon: BookOpen,
-    title: "株式投資の基礎",
-    description: "株式市場の仕組み、注文方法、リスク管理など、投資の基本を丁寧に解説します。",
-    level: "初級",
+    title: '株式投資の基礎',
+    description: '株式市場の仕組み、注文方法、リスク管理など、投資の基本を丁寧に解説します。',
+    level: '初級',
   },
   {
     icon: BarChart3,
-    title: "テクニカル分析入門",
-    description: "チャートの読み方、移動平均線、RSI、MACDなどの指標を使った分析手法を学びます。",
-    level: "中級",
+    title: 'テクニカル分析入門',
+    description: 'チャートの読み方、移動平均線、RSI、MACDなどの指標を使った分析手法を学びます。',
+    level: '中級',
   },
   {
     icon: LineChart,
-    title: "ファンダメンタル分析",
-    description: "財務諸表の読み方、企業価値の評価方法、業界分析の基礎を習得します。",
-    level: "中級",
+    title: 'ファンダメンタル分析',
+    description: '財務諸表の読み方、企業価値の評価方法、業界分析の基礎を習得します。',
+    level: '中級',
   },
   {
     icon: TrendingUp,
-    title: "投資戦略と実践",
-    description: "ポートフォリオ構築、リスク管理、長期投資と短期投資の戦略を実践的に学びます。",
-    level: "上級",
+    title: '投資戦略と実践',
+    description: 'ポートフォリオ構築、リスク管理、長期投資と短期投資の戦略を実践的に学びます。',
+    level: '上級',
   },
 ]
 

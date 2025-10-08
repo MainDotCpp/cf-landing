@@ -1,26 +1,28 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
 export default function OctoberLandingPage() {
   // 设置页面标题
   useEffect(() => {
-    document.title = "十月の投資チャンス | 今週の注目銘柄";
-  }, []);
+    document.title = '十月の投資チャンス | 今週の注目銘柄'
+  }, [])
 
   // LINE添加好友函数
   const addLineFunc = () => {
-    window.open('https://sdun.me/NHJDH5', '_blank', 'noopener,noreferrer');
-  };
+    window.open('https://sdun.me/NHJDH5', '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <main className="min-h-screen bg-white">
       <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 sm:py-12">
-        
+
         {/* 区块 1 - 主标题钩子 */}
         <div className="text-center mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-            十月の第一波を<br className="sm:hidden" />つかみたい人へ
+            十月の第一波を
+            <br className="sm:hidden" />
+            つかみたい人へ
           </h1>
         </div>
 
@@ -34,7 +36,8 @@ export default function OctoberLandingPage() {
         {/* 简单赚钱承诺 */}
         <div className="text-center mb-8">
           <p className="text-lg sm:text-xl text-[#06C755] font-bold">
-            簡単に、すぐに、確実に<br />
+            簡単に、すぐに、確実に
+            <br />
             利益を手に入れる方法
           </p>
         </div>
@@ -94,7 +97,9 @@ export default function OctoberLandingPage() {
         {/* 区块 5 - 使用说明 */}
         <div className="bg-gray-50 p-5 rounded-lg mb-8 border-2 border-gray-200">
           <p className="text-center text-base sm:text-lg text-gray-800">
-            トークで<span className="font-bold text-[#06C755] text-xl">「十月」</span>と送ってください
+            トークで
+            <span className="font-bold text-[#06C755] text-xl">「十月」</span>
+            と送ってください
           </p>
         </div>
 
@@ -128,7 +133,9 @@ export default function OctoberLandingPage() {
         {/* 区块 7 - 线上交流说明 */}
         <div className="bg-gray-50 p-5 rounded-lg mb-8">
           <p className="text-sm sm:text-base text-gray-700 text-center leading-relaxed">
-            追加後はオンラインで情報を共有し、<br className="sm:hidden" />市場の変化をリアルタイムでお知らせします
+            追加後はオンラインで情報を共有し、
+            <br className="sm:hidden" />
+            市場の変化をリアルタイムでお知らせします
           </p>
         </div>
 
@@ -137,13 +144,17 @@ export default function OctoberLandingPage() {
           <div className="flex justify-center gap-4 sm:gap-6">
             <div className="text-center">
               <p className="text-base sm:text-lg font-semibold text-gray-800">
-                ✅ 簡単に<br />稼げる
+                ✅ 簡単に
+                <br />
+                稼げる
               </p>
             </div>
             <div className="w-px bg-gray-300"></div>
             <div className="text-center">
               <p className="text-base sm:text-lg font-semibold text-gray-800">
-                ✅ すぐに<br />結果が出る
+                ✅ すぐに
+                <br />
+                結果が出る
               </p>
             </div>
           </div>
@@ -152,7 +163,8 @@ export default function OctoberLandingPage() {
         {/* 区块 9 - 紧迫感强调 */}
         <div className="bg-[#E60012] p-6 rounded-lg mb-8">
           <p className="text-center text-lg sm:text-xl font-bold text-white leading-relaxed">
-            今日始めた人だけが<br />
+            今日始めた人だけが
+            <br />
             明日の160万円を手にします
           </p>
         </div>
@@ -173,5 +185,5 @@ export default function OctoberLandingPage() {
 
       </div>
     </main>
-  );
+  )
 }

@@ -1,9 +1,9 @@
 'use client'
 
 import { MessageCircle, TrendingUp, Zap } from 'lucide-react'
+import { useCtaHandler } from '@/components/hooks/useCtaLink'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useCtaHandler } from '@/components/hooks/useCtaLink'
 
 export function CallToAction() {
   const handlePrimaryClick = useCtaHandler('primary', {

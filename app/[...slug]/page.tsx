@@ -1,5 +1,4 @@
 import ConfigPage from '@/app/config/ConfigPage'
-import ContactForm from '@/app/contact/ContactForm'
 
 // 导入默认首页组件
 import { EducationSection } from '@/components/education-section'

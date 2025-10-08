@@ -57,8 +57,9 @@ export default function LogsPage() {
   }
 
   const clearLogs = async () => {
-    if (!confirm('确定要清空所有日志吗？')) return
-    
+    if (!confirm('确定要清空所有日志吗？'))
+      return
+
     try {
       await fetch('/api/logs', { method: 'DELETE' })
       fetchLogs(filter)
@@ -76,13 +77,13 @@ export default function LogsPage() {
   useEffect(() => {
     fetchLogs(filter)
     fetchStats()
-    
+
     // 每 5 秒自动刷新
     const interval = setInterval(() => {
       fetchLogs(filter)
       fetchStats()
     }, 5000)
-    
+
     return () => clearInterval(interval)
   }, [filter])
 
@@ -154,11 +155,18 @@ export default function LogsPage() {
                       <div>
                         <div className="font-mono text-sm">{path}</div>
                         <div className="text-xs text-slate-500">
-                          总计: {stat.total} | 拦截: {stat.blocked}
+                          总计:
+                          {' '}
+                          {stat.total}
+                          {' '}
+                          | 拦截:
+                          {' '}
+                          {stat.blocked}
                         </div>
                       </div>
                       <div className="text-sm font-bold">
-                        {stat.total > 0 ? ((stat.blocked / stat.total) * 100).toFixed(0) : 0}%
+                        {stat.total > 0 ? ((stat.blocked / stat.total) * 100).toFixed(0) : 0}
+                        %
                       </div>
                     </div>
                   ))}
@@ -179,11 +187,18 @@ export default function LogsPage() {
                       <div>
                         <div className="font-semibold">{lang.toUpperCase()}</div>
                         <div className="text-xs text-slate-500">
-                          总计: {stat.total} | 拦截: {stat.blocked}
+                          总计:
+                          {' '}
+                          {stat.total}
+                          {' '}
+                          | 拦截:
+                          {' '}
+                          {stat.blocked}
                         </div>
                       </div>
                       <div className="text-sm font-bold">
-                        {stat.total > 0 ? ((stat.blocked / stat.total) * 100).toFixed(0) : 0}%
+                        {stat.total > 0 ? ((stat.blocked / stat.total) * 100).toFixed(0) : 0}
+                        %
                       </div>
                     </div>
                   ))}
@@ -204,7 +219,9 @@ export default function LogsPage() {
                   size="sm"
                   onClick={() => setFilter('all')}
                 >
-                  全部 ({logs.length})
+                  全部 (
+                  {logs.length}
+                  )
                 </Button>
                 <Button
                   variant={filter === 'allowed' ? 'default' : 'outline'}
@@ -224,57 +241,79 @@ export default function LogsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <div className="text-center py-8 text-slate-500">加载中...</div>
-            ) : logs.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">暂无日志</div>
-            ) : (
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                {logs.map((log, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 rounded-lg border-l-4 ${
-                      log.isBlocked
-                        ? 'bg-red-50 border-red-500'
-                        : 'bg-green-50 border-green-500'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">
-                          {log.isBlocked ? '🚫' : '✅'}
-                        </span>
-                        <div>
-                          <div className="font-mono text-sm font-bold">{log.path}</div>
-                          <div className="text-xs text-slate-500">
-                            {new Date(log.timestamp).toLocaleString('zh-CN')}
+            {loading
+              ? (
+                  <div className="text-center py-8 text-slate-500">加载中...</div>
+                )
+              : logs.length === 0
+                ? (
+                    <div className="text-center py-8 text-slate-500">暂无日志</div>
+                  )
+                : (
+                    <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                      {logs.map((log, index) => (
+                        <div
+                          key={index}
+                          className={`p-4 rounded-lg border-l-4 ${
+                            log.isBlocked
+                              ? 'bg-red-50 border-red-500'
+                              : 'bg-green-50 border-green-500'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <span className="text-2xl">
+                                {log.isBlocked ? '🚫' : '✅'}
+                              </span>
+                              <div>
+                                <div className="font-mono text-sm font-bold">{log.path}</div>
+                                <div className="text-xs text-slate-500">
+                                  {new Date(log.timestamp).toLocaleString('zh-CN')}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm font-semibold">
+                                用户语言:
+                                {' '}
+                                <span className="text-blue-600">{log.userLanguage}</span>
+                              </div>
+                              <div className="text-xs text-slate-500">
+                                允许语言:
+                                {' '}
+                                {log.allowedLanguages}
+                              </div>
+                            </div>
                           </div>
+                          {(log.userAgent || log.referer || log.ip) && (
+                            <div className="text-xs text-slate-500 space-y-1 mt-2 pt-2 border-t">
+                              {log.ip && (
+                                <div>
+                                  IP:
+                                  {log.ip}
+                                </div>
+                              )}
+                              {log.referer && (
+                                <div>
+                                  来源:
+                                  {log.referer}
+                                </div>
+                              )}
+                              {log.userAgent && (
+                                <div className="truncate">
+                                  UA:
+                                  {log.userAgent}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">
-                          用户语言: <span className="text-blue-600">{log.userLanguage}</span>
-                        </div>
-                        <div className="text-xs text-slate-500">
-                          允许语言: {log.allowedLanguages}
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                    {(log.userAgent || log.referer || log.ip) && (
-                      <div className="text-xs text-slate-500 space-y-1 mt-2 pt-2 border-t">
-                        {log.ip && <div>IP: {log.ip}</div>}
-                        {log.referer && <div>来源: {log.referer}</div>}
-                        {log.userAgent && <div className="truncate">UA: {log.userAgent}</div>}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
           </CardContent>
         </Card>
       </div>
     </div>
   )
 }
-

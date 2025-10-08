@@ -40,4 +40,3 @@ export async function fetchAvailablePages(): Promise<PageInfo[]> {
   }
   return response.json()
 }
-

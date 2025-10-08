@@ -21,4 +21,3 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
     </div>
   )
 }
-

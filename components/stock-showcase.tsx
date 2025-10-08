@@ -1,31 +1,31 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, Lock } from "lucide-react"
+import { ArrowUpRight, Lock } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 
 const sampleStocks = [
   {
-    name: "トヨタ自動車",
-    code: "7203",
-    sector: "自動車製造",
-    trend: "+5.2%",
-    rating: "強力推奨",
-    color: "bg-green-500",
+    name: 'トヨタ自動車',
+    code: '7203',
+    sector: '自動車製造',
+    trend: '+5.2%',
+    rating: '強力推奨',
+    color: 'bg-green-500',
   },
   {
-    name: "ソニーグループ",
-    code: "6758",
-    sector: "電子技術",
-    trend: "+3.8%",
-    rating: "推奨",
-    color: "bg-blue-500",
+    name: 'ソニーグループ',
+    code: '6758',
+    sector: '電子技術',
+    trend: '+3.8%',
+    rating: '推奨',
+    color: 'bg-blue-500',
   },
   {
-    name: "ソフトバンクグループ",
-    code: "9984",
-    sector: "投資持株",
-    trend: "+4.1%",
-    rating: "推奨",
-    color: "bg-purple-500",
+    name: 'ソフトバンクグループ',
+    code: '9984',
+    sector: '投資持株',
+    trend: '+4.1%',
+    rating: '推奨',
+    color: 'bg-purple-500',
   },
 ]
 

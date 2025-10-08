@@ -1,8 +1,8 @@
 'use client'
 
 import { ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { useCtaHandler } from '@/components/hooks/useCtaLink'
+import { Button } from '@/components/ui/button'
 
 export function HeroSection() {
   const handlePrimaryClick = useCtaHandler('primary', {

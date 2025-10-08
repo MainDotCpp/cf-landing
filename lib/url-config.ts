@@ -1,4 +1,3 @@
-import { unstable_cache } from 'next/cache'
 import { headers } from 'next/headers'
 import { prisma } from './prisma'
 

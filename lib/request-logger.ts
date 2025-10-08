@@ -23,7 +23,7 @@ class RequestLogger {
    */
   log(logData: RequestLog) {
     this.logs.push(logData)
-    
+
     // 限制日志数量
     if (this.logs.length > this.maxLogs) {
       this.logs.shift()
@@ -108,7 +108,7 @@ class RequestLogger {
       total,
       blocked,
       allowed,
-      blockRate: total > 0 ? ((blocked / total) * 100).toFixed(2) + '%' : '0%',
+      blockRate: total > 0 ? `${((blocked / total) * 100).toFixed(2)}%` : '0%',
       pathStats,
       languageStats,
     }
@@ -155,4 +155,3 @@ class RequestLogger {
 const requestLogger = new RequestLogger()
 
 export { requestLogger }
-

@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Footer } from "@/components/footer";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: "特定商取引法に基づく表記 | 資産運用セミナー",
-  description: "特定商取引法に基づく事業者情報",
-};
+  title: '特定商取引法に基づく表記 | 資産運用セミナー',
+  description: '特定商取引法に基づく事業者情報',
+}
 
 export default function LegalPage() {
   return (
@@ -13,8 +13,8 @@ export default function LegalPage() {
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 md:p-12">
           {/* 返回首页链接 */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center text-indigo-600 hover:text-indigo-700 mb-6 transition-colors"
           >
             <span className="mr-2">←</span>
@@ -25,7 +25,7 @@ export default function LegalPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
             特定商取引法に基づく表記
           </h1>
-          
+
           <p className="text-sm text-slate-500 mb-8">最終更新日：2025年9月30日</p>
 
           {/* 事業者情報 */}
@@ -187,8 +187,8 @@ export default function LegalPage() {
 
           {/* 返回链接 */}
           <div className="mt-12 pt-6 border-t border-slate-200">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="inline-flex items-center text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               <span className="mr-2">←</span>
@@ -197,8 +197,8 @@ export default function LegalPage() {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </>
-  );
+  )
 }

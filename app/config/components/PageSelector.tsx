@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input'
 import type { PageInfo } from '@/types/config'
+import { Input } from '@/components/ui/input'
 
 interface PageSelectorProps {
   value: string
@@ -46,4 +46,3 @@ export function PageSelector({ value, onChange, pages }: PageSelectorProps) {
     </div>
   )
 }
-

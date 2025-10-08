@@ -1,25 +1,25 @@
-import { Shield, Clock, Users, Award } from "lucide-react"
+import { Award, Clock, Shield, Users } from 'lucide-react'
 
 const features = [
   {
     icon: Shield,
-    title: "信頼性の高い情報",
-    description: "経験豊富なアナリストによる正確な市場分析と投資情報を提供します。",
+    title: '信頼性の高い情報',
+    description: '経験豊富なアナリストによる正確な市場分析と投資情報を提供します。',
   },
   {
     icon: Clock,
-    title: "毎日更新",
-    description: "市場の動きに合わせて、最新の分析レポートを毎日お届けします。",
+    title: '毎日更新',
+    description: '市場の動きに合わせて、最新の分析レポートを毎日お届けします。',
   },
   {
     icon: Users,
-    title: "初心者にも優しい",
-    description: "基礎から丁寧に解説し、誰でも理解できる教育コンテンツを用意しています。",
+    title: '初心者にも優しい',
+    description: '基礎から丁寧に解説し、誰でも理解できる教育コンテンツを用意しています。',
   },
   {
     icon: Award,
-    title: "プロの知見",
-    description: "実績のある投資家やアナリストの知識と経験を学ぶことができます。",
+    title: 'プロの知見',
+    description: '実績のある投資家やアナリストの知識と経験を学ぶことができます。',
   },
 ]
 
