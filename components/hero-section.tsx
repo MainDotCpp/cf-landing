@@ -4,7 +4,7 @@ import { Sparkles, TrendingUp, Zap } from 'lucide-react'
 import Image from 'next/image'
 import { useCtaHandler } from '@/components/hooks/useCtaLink'
 import { Button } from '@/components/ui/button'
-import StockImage from '@/images/japanese-stock-market-chart-with-rising-trend-and-.jpg'
+import StockImage from '@/images/img1.jpg'
 
 export function HeroSection() {
   const handlePrimaryClick = useCtaHandler('primary', {
