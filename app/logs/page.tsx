@@ -34,7 +34,7 @@ export default function LogsPage() {
     setLoading(true)
     try {
       const response = await fetch(`/api/logs?type=${type}`)
-      const data = await response.json()
+      const data = await response.json() as { logs?: RequestLog[] }
       setLogs(data.logs || [])
     }
     catch (error) {
@@ -48,7 +48,7 @@ export default function LogsPage() {
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/logs?type=stats')
-      const data = await response.json()
+      const data = await response.json() as Stats
       setStats(data)
     }
     catch (error) {
