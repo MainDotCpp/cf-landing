@@ -37,7 +37,7 @@ git reset --hard origin/main
 
 # 2. 清理并重新安装依赖（避免跨平台问题）
 echo -e "${BLUE}📦 更新依赖...${NC}"
-rm -rf node_modules
+# rm -rf node_modules
 npm install --include=optional
 
 # 3. 生成 Prisma Client
