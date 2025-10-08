@@ -2,8 +2,6 @@
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 
 const nextConfig = {
-  /* config options here */
-  output: 'standalone', // Docker 部署必需
   eslint: {
     ignoreDuringBuilds: true, // 构建时忽略 ESLint 错误
   },
