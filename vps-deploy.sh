@@ -19,7 +19,7 @@ echo -e "${BLUE}🚀 开始部署...${NC}"
 echo ""
 
 # 配置
-PROJECT_DIR="/root/projects/cf-landing
+PROJECT_DIR="/root/projects/cf-landing"
 APP_NAME="cf-landing"
 
 # 进入项目目录
