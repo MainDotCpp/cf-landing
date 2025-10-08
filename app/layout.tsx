@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/next'
 import { GeistMono } from 'geist/font/mono'
 import { Noto_Sans_JP } from 'next/font/google'
 import { Suspense } from 'react'
+import { Toaster } from 'sonner'
+import { QueryProvider } from '@/components/providers/QueryProvider'
 import './globals.css'
 
 const notoSansJP = Noto_Sans_JP({
@@ -25,8 +27,11 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`font-sans ${notoSansJP.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={null}>{children}</Suspense>
-        <Analytics />
+        <QueryProvider>
+          <Suspense fallback={null}>{children}</Suspense>
+          <Toaster position="top-center" richColors />
+          <Analytics />
+        </QueryProvider>
       </body>
     </html>
   )

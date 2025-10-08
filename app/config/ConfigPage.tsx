@@ -1,134 +1,75 @@
 'use client'
 
+import type { UrlConfig } from '@/types/config'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-
-interface UrlConfig {
-  host: string
-  path: string
-  pageInternal: string
-  ctas: {
-    primary?: string
-    secondary?: string
-  }
-  analyticsSnippet: {
-    headHtml?: string
-    bodyStartHtml?: string
-    bodyEndHtml?: string
-  }
-}
-
-interface PageInfo {
-  path: string
-  name: string
-  location: string
-}
+import { ErrorState } from './components/ErrorState'
+import { FormField } from './components/FormField'
+import { LoadingState } from './components/LoadingState'
+import { PageSelector } from './components/PageSelector'
+import { useAvailablePages, useConfigMutation, useConfigQuery } from './hooks/useConfigData'
 
 export default function ConfigPage() {
-  const [config, setConfig] = useState<UrlConfig | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [editing, setEditing] = useState(false)
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/'
+
+  // 数据获取
+  const { data: config, isLoading, error, refetch } = useConfigQuery(currentPath)
+  const { data: pages = [] } = useAvailablePages()
+  const mutation = useConfigMutation(currentPath)
+
+  // 表单数据状态
   const [formData, setFormData] = useState<Partial<UrlConfig>>({})
-  const [availablePages, setAvailablePages] = useState<PageInfo[]>([])
 
-  const fetchConfig = async () => {
-    try {
-      setLoading(true)
-      // 发送当前路径给 API
-      const currentPath = window.location.pathname
-      const response = await fetch(`/api/config?path=${encodeURIComponent(currentPath)}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch config')
-      }
-      const data = await response.json() as UrlConfig
-      setConfig(data)
-      setFormData(data)
-    }
-    catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
-    }
-    finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchAvailablePages = async () => {
-    try {
-      const response = await fetch('/api/pages')
-      if (response.ok) {
-        const pages = await response.json() as PageInfo[]
-        setAvailablePages(pages)
-      }
-    }
-    catch (err) {
-      console.error('Failed to fetch available pages:', err)
-    }
-  }
-
+  // 当配置加载完成后，初始化表单数据
   useEffect(() => {
-    void fetchConfig()
-    void fetchAvailablePages()
-  }, [])
+    if (config) {
+      setFormData(config)
+    }
+  }, [config])
 
+  // 保存配置
   const handleSave = async () => {
-    try {
-      setLoading(true)
-      const currentPath = window.location.pathname
-      const response = await fetch(`/api/config?path=${encodeURIComponent(currentPath)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to save config')
-      }
-
-      const data = await response.json() as UrlConfig
-      setConfig(data)
-      setEditing(false)
-      // eslint-disable-next-line no-alert
-      window.alert('配置已保存！')
-    }
-    catch (err) {
-      // eslint-disable-next-line no-alert
-      window.alert(`保存失败: ${err instanceof Error ? err.message : 'Unknown error'}`)
-    }
-    finally {
-      setLoading(false)
-    }
+    await mutation.mutateAsync(formData)
   }
 
-  if (loading && !config) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-slate-600">加载配置中...</p>
-        </div>
-      </div>
-    )
+  // 重置表单到原始数据
+  const handleReset = () => {
+    setFormData(config || {})
   }
 
+  // 更新字段
+  const updateField = (field: keyof UrlConfig, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const updateCta = (type: 'primary' | 'secondary', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      ctas: { ...prev.ctas, [type]: value },
+    }))
+  }
+
+  const updateAnalytics = (field: 'headHtml' | 'bodyStartHtml' | 'bodyEndHtml', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      analyticsSnippet: { ...prev.analyticsSnippet, [field]: value },
+    }))
+  }
+
+  // 加载状态
+  if (isLoading) {
+    return <LoadingState />
+  }
+
+  // 错误状态
   if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full">
-          <CardHeader>
-            <CardTitle className="text-red-600">错误</CardTitle>
-            <CardDescription>{error}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={fetchConfig}>重试</Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    return <ErrorState error={error.message} onRetry={() => refetch()} />
+  }
+
+  if (!config) {
+    return <ErrorState error="配置未找到" onRetry={() => refetch()} />
   }
 
   return (
@@ -141,7 +82,7 @@ export default function ConfigPage() {
             <p className="text-slate-600">
               当前主机:
               {' '}
-              <code className="bg-slate-200 px-2 py-1 rounded">{config?.host}</code>
+              <code className="bg-slate-200 px-2 py-1 rounded">{config.host}</code>
             </p>
           </div>
           <Link href="/" className="text-sm text-blue-600 hover:text-blue-700">
@@ -158,78 +99,25 @@ export default function ConfigPage() {
               <CardDescription>主机和路径配置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  主机 (Host)
-                </label>
-                <input
-                  type="text"
-                  value={formData.host || ''}
-                  disabled
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100 text-slate-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  路径 (Path)
-                </label>
-                <input
-                  type="text"
-                  value={formData.path || ''}
-                  disabled
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100 text-slate-500"
-                />
-              </div>
+              <FormField
+                label="主机 (Host)"
+                value={formData.host || ''}
+                disabled
+              />
+              <FormField
+                label="路径 (Path)"
+                value={formData.path || ''}
+                disabled
+              />
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   内部页面 (Page Internal)
                 </label>
-                {editing
-                  ? (
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          value={formData.pageInternal || '/'}
-                          onChange={e => setFormData({ ...formData, pageInternal: e.target.value })}
-                          placeholder="/contact"
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                        {availablePages.length > 0 && (
-                          <div>
-                            <p className="text-xs text-slate-600 mb-2 font-medium">可用页面：</p>
-                            <div className="flex flex-wrap gap-2">
-                              {availablePages.map(page => (
-                                <button
-                                  key={page.path}
-                                  type="button"
-                                  onClick={() => setFormData({ ...formData, pageInternal: page.path })}
-                                  className="group px-3 py-1.5 text-xs bg-slate-100 hover:bg-blue-100 border border-slate-200 hover:border-blue-300 rounded-md transition-all"
-                                  title={page.location}
-                                >
-                                  <span className="font-medium">{page.name}</span>
-                                  <span className="text-slate-400 group-hover:text-blue-600 ml-1">
-                                    (
-                                    {page.path}
-                                    )
-                                  </span>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        <p className="text-xs text-slate-500">
-                          点击上方按钮快速选择，或手动输入任何有效的页面路径
-                        </p>
-                      </div>
-                    )
-                  : (
-                      <input
-                        type="text"
-                        value={formData.pageInternal || '/'}
-                        disabled
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-50"
-                      />
-                    )}
+                <PageSelector
+                  value={formData.pageInternal || '/'}
+                  onChange={value => updateField('pageInternal', value)}
+                  pages={pages}
+                />
               </div>
             </CardContent>
           </Card>
@@ -241,58 +129,18 @@ export default function ConfigPage() {
               <CardDescription>配置页面上的行动号召按钮链接</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  主要按钮链接 (Primary)
-                </label>
-                {editing
-                  ? (
-                      <input
-                        type="text"
-                        value={formData.ctas?.primary || ''}
-                        onChange={e => setFormData({
-                          ...formData,
-                          ctas: { ...formData.ctas, primary: e.target.value },
-                        })}
-                        placeholder="https://example.com"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    )
-                  : (
-                      <input
-                        type="text"
-                        value={formData.ctas?.primary || ''}
-                        disabled
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-50"
-                      />
-                    )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  次要按钮链接 (Secondary)
-                </label>
-                {editing
-                  ? (
-                      <input
-                        type="text"
-                        value={formData.ctas?.secondary || ''}
-                        onChange={e => setFormData({
-                          ...formData,
-                          ctas: { ...formData.ctas, secondary: e.target.value },
-                        })}
-                        placeholder="https://example.com"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    )
-                  : (
-                      <input
-                        type="text"
-                        value={formData.ctas?.secondary || ''}
-                        disabled
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-50"
-                      />
-                    )}
-              </div>
+              <FormField
+                label="主要按钮链接 (Primary)"
+                value={formData.ctas?.primary || ''}
+                onChange={value => updateCta('primary', value)}
+                placeholder="https://example.com"
+              />
+              <FormField
+                label="次要按钮链接 (Secondary)"
+                value={formData.ctas?.secondary || ''}
+                onChange={value => updateCta('secondary', value)}
+                placeholder="https://example.com"
+              />
             </CardContent>
           </Card>
 
@@ -303,81 +151,40 @@ export default function ConfigPage() {
               <CardDescription>页面分析和追踪代码</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Head HTML
-                </label>
-                {editing
-                  ? (
-                      <textarea
-                        value={formData.analyticsSnippet?.headHtml || ''}
-                        onChange={e => setFormData({
-                          ...formData,
-                          analyticsSnippet: { ...formData.analyticsSnippet, headHtml: e.target.value },
-                        })}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="<!-- Analytics code -->"
-                      />
-                    )
-                  : (
-                      <pre className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-50 text-sm overflow-x-auto">
-                        {formData.analyticsSnippet?.headHtml || '(空)'}
-                      </pre>
-                    )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Body Start HTML
-                </label>
-                {editing
-                  ? (
-                      <textarea
-                        value={formData.analyticsSnippet?.bodyStartHtml || ''}
-                        onChange={e => setFormData({
-                          ...formData,
-                          analyticsSnippet: { ...formData.analyticsSnippet, bodyStartHtml: e.target.value },
-                        })}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="<!-- Analytics code -->"
-                      />
-                    )
-                  : (
-                      <pre className="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-50 text-sm overflow-x-auto">
-                        {formData.analyticsSnippet?.bodyStartHtml || '(空)'}
-                      </pre>
-                    )}
-              </div>
+              <FormField
+                label="Head HTML"
+                value={formData.analyticsSnippet?.headHtml || ''}
+                onChange={value => updateAnalytics('headHtml', value)}
+                type="textarea"
+                placeholder="<!-- Analytics code -->"
+              />
+              <FormField
+                label="Body Start HTML"
+                value={formData.analyticsSnippet?.bodyStartHtml || ''}
+                onChange={value => updateAnalytics('bodyStartHtml', value)}
+                type="textarea"
+                placeholder="<!-- Analytics code -->"
+              />
             </CardContent>
           </Card>
 
           {/* Actions */}
           <div className="flex gap-4">
-            {editing
-              ? (
-                  <>
-                    <Button onClick={handleSave} disabled={loading} className="flex-1">
-                      {loading ? '保存中...' : '保存更改'}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setEditing(false)
-                        setFormData(config || {})
-                      }}
-                      variant="outline"
-                      disabled={loading}
-                      className="flex-1"
-                    >
-                      取消
-                    </Button>
-                  </>
-                )
-              : (
-                  <Button onClick={() => setEditing(true)} className="flex-1">
-                    编辑配置
-                  </Button>
-                )}
+            <Button
+              onClick={handleSave}
+              disabled={mutation.isPending}
+              className="flex-1"
+            >
+              {mutation.isPending ? '保存中...' : '保存配置'}
+            </Button>
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              disabled={mutation.isPending}
+              className="flex-1"
+            >
+              重置
+            </Button>
           </div>
         </div>
 
