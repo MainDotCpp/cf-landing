@@ -1,15 +1,15 @@
-# 🚀 CF Landing - Next.js 落地页项目
+# 🚀 CF Landing
 
 基于 Next.js 15 的多页面落地页系统，支持动态配置、语言过滤、请求日志等功能。
 
 ## ✨ 主要功能
 
-- 🎯 **动态页面渲染** - 通过数据库配置动态渲染不同页面内容
-- 🌍 **语言过滤** - 基于用户语言自动显示对应内容
-- 📊 **请求日志** - 记录和可视化请求及拦截情况  
-- ⚙️ **在线配置** - 通过 `?config=1` 访问配置页面
-- 📈 **Google Analytics** - 集成 GA 追踪
-- 🗄️ **PostgreSQL 数据库** - 使用 Prisma ORM
+- 🎯 **动态页面渲染** - 数据库配置页面内容
+- 🌍 **语言过滤** - 基于用户语言自动显示内容
+- 📊 **请求日志** - 记录和可视化请求
+- ⚙️ **在线配置** - 访问 `?config=1` 配置页面
+- 📈 **Google Analytics** - GA 追踪集成
+- 🗄️ **PostgreSQL** - Prisma ORM
 
 ## 🚀 快速开始
 
@@ -21,30 +21,24 @@ npm install
 
 # 配置数据库
 cp .env.example .env
-# 编辑 .env 配置 DATABASE_URL
+# 编辑 .env 设置 DATABASE_URL
 
-# 生成 Prisma Client
-npm run prisma:generate
-
-# 推送数据库结构
+# 初始化数据库
+npx prisma generate
 npx prisma db push
 
 # 启动开发服务器
 npm run dev
 ```
 
-访问 http://localhost:3000
+### VPS 生产部署
 
-### 生产部署
-
-查看 [部署指南](./DEPLOY.md)
+查看 [PM2 部署指南](./PM2.md)
 
 ```bash
-# Docker 部署
-./deploy.sh --fresh
-
-# 或使用 Cloudflare Pages
-npm run deploy
+# 在 VPS 上
+cd /root/projects/cf-landing
+./vps-deploy.sh
 ```
 
 ## 📁 项目结构
@@ -99,68 +93,24 @@ const LANGUAGE_CONFIG = {
 - 语言分布
 - 拦截情况
 
-## 🗄️ 数据库
-
-### PostgreSQL 配置
+## 📜 常用命令
 
 ```bash
-# 本地
-DATABASE_URL="postgresql://postgres:password@localhost:5432/cf_landing"
-
-# Supabase
-DATABASE_URL="postgresql://postgres:[密码]@db.[项目ID].supabase.co:5432/postgres"
-
-# Neon
-DATABASE_URL="postgresql://[用户名]:[密码]@[endpoint].neon.tech/[dbname]?sslmode=require"
-```
-
-### Prisma 命令
-
-```bash
-# 生成 Client
-npm run prisma:generate
-
-# 推送结构
-npx prisma db push
-
-# 打开 Studio
-npx prisma studio
-```
-
-## 📜 可用脚本
-
-```bash
+# 开发
 npm run dev              # 开发服务器
-npm run build            # 构建生产版本
+npm run build            # 构建
 npm run start            # 启动生产服务器
-npm run lint             # 代码检查
-npm run deploy           # 部署到 Cloudflare
 
-./deploy.sh              # Docker 部署
-./scripts/logs.sh        # 查看日志
-./scripts/update.sh      # 更新应用
+# Prisma
+npx prisma generate      # 生成 Client
+npx prisma db push       # 推送结构
+npx prisma studio        # 数据库管理
+
+# PM2（VPS）
+pm2 status               # 查看状态
+pm2 logs cf-landing      # 查看日志
+pm2 restart cf-landing   # 重启
 ```
-
-## 🌐 部署选项
-
-### Cloudflare Pages（推荐）
-```bash
-wrangler login
-npm run deploy
-```
-
-### Vercel
-```bash
-vercel login
-vercel --prod
-```
-
-### Docker
-```bash
-./deploy.sh --fresh
-```
-
-详见 [DEPLOY.md](./DEPLOY.md)
 
 ## 🛠️ 技术栈
 

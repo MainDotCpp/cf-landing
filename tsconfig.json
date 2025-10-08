@@ -10,10 +10,7 @@
       "@/*": ["./*"]
     },
     "resolveJsonModule": true,
-    "types": [
-      "./cloudflare-env.d.ts",
-      "node"
-    ],
+    "types": ["node"],
     "allowJs": true,
     "strict": true,
     "noEmit": true,

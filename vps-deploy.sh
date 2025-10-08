@@ -38,15 +38,15 @@ git reset --hard origin/main
 # 2. 清理并重新安装依赖（避免跨平台问题）
 echo -e "${BLUE}📦 更新依赖...${NC}"
 # rm -rf node_modules
-npm install --include=optional
+yarn install --include=optional
 
 # 3. 生成 Prisma Client
 echo -e "${BLUE}🔧 生成 Prisma Client...${NC}"
-npx prisma generate
+yarn prisma generate
 
 # 4. 构建应用
 echo -e "${BLUE}🔨 构建应用...${NC}"
-npm run build
+yarn run build
 
 # 5. 使用 PM2 重启应用
 echo -e "${BLUE}♻️  重启应用...${NC}"
