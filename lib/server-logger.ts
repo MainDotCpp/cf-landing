@@ -5,6 +5,7 @@
 
 import { headers } from 'next/headers'
 import { cache } from 'react'
+import { getRealIP } from './ip-utils'
 import { getLanguageFromHeaders, normalizeLanguage } from './language'
 import { prisma } from './prisma'
 
@@ -38,8 +39,7 @@ async function logPageViewInternal(_requestId: string) {
         blockReason,
         userAgent: headersList.get('user-agent') || undefined,
         referer: headersList.get('referer') || undefined,
-        ip: headersList.get('x-real-ip')
-          || undefined,
+        ip: getRealIP(headersList) || undefined,
       },
     })
   }

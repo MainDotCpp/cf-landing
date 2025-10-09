@@ -6,6 +6,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { isGoogleBot, shouldBlockGoogle } from '@/lib/google-detector'
+import { getRealIP } from '@/lib/ip-utils'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -25,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const requestId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
 
   // 获取访问者信息
-  const ip = request.headers.get('x-real-ip')
+  const ip = getRealIP(request.headers)
   const userAgent = request.headers.get('user-agent') || ''
 
   // 检测是否为 Google bot
