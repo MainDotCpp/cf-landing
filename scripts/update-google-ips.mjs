@@ -17,19 +17,26 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Google 官方 IP 段 API
-const GOOGLEBOT_API = 'https://developers.google.com/search/apis/ipranges/googlebot.json'
+// Google 官方 IP 段 API (包含所有 Google 服务)
+const GOOGLE_IP_API = 'https://www.gstatic.com/ipranges/goog.json'
 
 async function fetchGoogleIPRanges() {
-  console.log('📥 Fetching Google IP ranges from official API...')
+  console.log('📥 Fetching Google IP ranges from goog.json (all Google services)...')
 
   try {
-    const response = await fetch(GOOGLEBOT_API)
+    const response = await fetch(GOOGLE_IP_API)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
     const data = await response.json()
+
+    // 提取元数据
+    const metadata = {
+      syncToken: data.syncToken || 'unknown',
+      creationTime: data.creationTime || new Date().toISOString(),
+      source: GOOGLE_IP_API,
+    }
 
     // 提取 IPv4 地址段
     const ipv4Ranges = data.prefixes
@@ -43,8 +50,9 @@ async function fetchGoogleIPRanges() {
 
     console.log(`✅ Fetched ${ipv4Ranges.length} IPv4 ranges`)
     console.log(`✅ Fetched ${ipv6Ranges.length} IPv6 ranges`)
+    console.log(`📊 Sync Token: ${metadata.syncToken}`)
 
-    return { ipv4Ranges, ipv6Ranges }
+    return { ipv4Ranges, ipv6Ranges, metadata }
   }
   catch (error) {
     console.error('❌ Error fetching Google IP ranges:', error)
@@ -52,20 +60,25 @@ async function fetchGoogleIPRanges() {
   }
 }
 
-function generateTypeScriptFile(ipv4Ranges, ipv6Ranges) {
+function generateTypeScriptFile(ipv4Ranges, ipv6Ranges, metadata) {
   const currentDate = new Date().toISOString().split('T')[0]
+  const totalRanges = ipv4Ranges.length + ipv6Ranges.length
 
   const content = `/**
  * Google IP 地址段和 User-Agent 数据
- * 数据来源: https://developers.google.com/search/apis/ipranges/googlebot.json
+ * 数据来源: ${metadata.source}
  * 最后更新: ${currentDate}
+ * Sync Token: ${metadata.syncToken}
  *
  * ⚠️ 此文件由脚本自动生成，请勿手动编辑
  * 更新命令: node scripts/update-google-ips.mjs
+ *
+ * 注意：此数据源包含所有 Google 服务的 IP 地址段
+ * 包括：Googlebot、Google Cloud、Google DNS、AdWords 等
  */
 
 /**
- * Googlebot IPv4 地址段
+ * Google IPv4 地址段（所有 Google 服务）
  * 建议每月更新一次
  */
 export const GOOGLEBOT_IPV4_RANGES = [
@@ -73,7 +86,7 @@ ${ipv4Ranges.map(range => `  '${range}',`).join('\n')}
 ]
 
 /**
- * Googlebot IPv6 地址段
+ * Google IPv6 地址段（所有 Google 服务）
  * 建议每月更新一次
  */
 export const GOOGLEBOT_IPV6_RANGES = [
@@ -122,12 +135,15 @@ export const GOOGLE_BOT_TYPES = {
  * 数据更新信息
  */
 export const IP_RANGES_METADATA = {
+  source: '${metadata.source}',
+  syncToken: '${metadata.syncToken}',
+  creationTime: '${metadata.creationTime}',
   lastUpdated: '${currentDate}',
-  source: '${GOOGLEBOT_API}',
   totalIPv4Ranges: ${ipv4Ranges.length},
   totalIPv6Ranges: ${ipv6Ranges.length},
-  totalRanges: ${ipv4Ranges.length + ipv6Ranges.length},
+  totalRanges: ${totalRanges},
   updateFrequency: 'monthly',
+  note: 'Includes all Google services (Googlebot, Cloud, DNS, etc.)',
 }
 `
 
@@ -139,10 +155,10 @@ async function updateGoogleIPRanges() {
     console.log('🚀 Starting Google IP ranges update...\n')
 
     // 1. 获取最新 IP 段
-    const { ipv4Ranges, ipv6Ranges } = await fetchGoogleIPRanges()
+    const { ipv4Ranges, ipv6Ranges, metadata } = await fetchGoogleIPRanges()
 
     // 2. 生成 TypeScript 文件内容
-    const fileContent = generateTypeScriptFile(ipv4Ranges, ipv6Ranges)
+    const fileContent = generateTypeScriptFile(ipv4Ranges, ipv6Ranges, metadata)
 
     // 3. 写入文件
     const targetPath = path.join(__dirname, '../lib/google-ip-ranges.ts')
