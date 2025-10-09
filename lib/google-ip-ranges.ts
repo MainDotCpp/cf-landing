@@ -356,6 +356,7 @@ export const GOOGLE_USER_AGENTS = [
   'AdWords-Express', // AdWords Express
   'Google-Ads-Creatives-Assistant', // AdWords 创意助手
   'Google-Adwords-DisplayAds-WebRender', // AdWords 展示广告 WebRender
+  'adsbot'
 ]
 
 /**
