@@ -4,26 +4,27 @@
  */
 
 import { headers } from 'next/headers'
+import { cache } from 'react'
 import { getLanguageFromHeaders, normalizeLanguage } from './language'
 import { prisma } from './prisma'
 
 /**
- * 记录页面访问
- * @param path 访问路径
+ * 记录页面访问（使用 React cache 确保同一请求只执行一次）
+ * @param _requestId 请求唯一ID（被 React cache 用作 key）
  */
-export async function logPageView(path: string) {
+async function logPageViewInternal(_requestId: string) {
   try {
     const headersList = await headers()
     const userLang = normalizeLanguage(
       getLanguageFromHeaders(headersList.get('accept-language')),
     )
 
-    // 从 middleware 设置的 headers 中读取屏蔽信息
+    // 从 middleware 设置的 headers 中读取信息
+    const originalPath = headersList.get('x-original-pathname') || headersList.get('x-original-path') || '/'
     const isBlocked = headersList.get('x-blocked') === 'true'
     const blockReason = headersList.get('x-block-reason') || null
     const isGoogleBot = headersList.get('x-is-google-bot') === 'true'
     const botVerified = headersList.get('x-bot-verified') === 'true'
-    const originalPath = headersList.get('x-original-path') || path
 
     await prisma.requestLog.create({
       data: {
@@ -49,3 +50,9 @@ export async function logPageView(path: string) {
     console.error('Failed to log page view:', error)
   }
 }
+
+/**
+ * 导出的日志记录函数（使用 React cache 包装）
+ * 同一个请求 ID 只会执行一次数据库写入
+ */
+export const logPageView = cache(logPageViewInternal)

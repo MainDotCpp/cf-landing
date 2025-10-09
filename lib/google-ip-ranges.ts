@@ -351,6 +351,9 @@ export const GOOGLE_USER_AGENTS = [
   'Google-Read-Aloud', // 朗读功能
   'DuplexWeb-Google', // Duplex 网络爬虫
   'FeedFetcher-Google', // Feed 抓取
+  'Google-AdWords', // AdWords 广告系统
+  'Google-Adwords', // AdWords 小写变体
+  'AdWords-Express', // AdWords Express
 ]
 
 /**

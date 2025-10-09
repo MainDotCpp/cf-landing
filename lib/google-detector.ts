@@ -88,11 +88,12 @@ export function isGoogleBot(
     }
   }
 
-  // 情况 3: 只有 IP 匹配，UA 不匹配 - 可能是 Google Cloud 用户
+  // 情况 3: 只有 IP 匹配，UA 不匹配 - 来自 Google IP，拦截
+  // 策略：100% 拦截所有来自 Google IP 段的访问
   if (ipMatch && !uaMatch) {
     return {
-      isGoogle: false,
-      reason: 'Google Cloud IP but non-bot UA (likely user)',
+      isGoogle: true,
+      reason: 'Google IP detected (blocking all Google network traffic)',
       verified: false,
       ipMatch: true,
       uaMatch: false,

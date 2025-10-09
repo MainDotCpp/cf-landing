@@ -21,6 +21,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // 生成唯一请求 ID（用于防止重复记录）
+  const requestId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
+
   // 获取访问者信息
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
   const userAgent = request.headers.get('user-agent') || ''
@@ -41,6 +44,8 @@ export async function middleware(request: NextRequest) {
     response.headers.set('x-bot-verified', googleCheck.verified ? 'true' : 'false')
     response.headers.set('x-block-reason', googleCheck.reason)
     response.headers.set('x-original-path', pathname)
+    response.headers.set('x-request-id', requestId)
+    response.headers.set('x-original-pathname', pathname)
 
     return response
   }
@@ -49,6 +54,8 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
   response.headers.set('x-blocked', 'false')
   response.headers.set('x-is-google-bot', 'false')
+  response.headers.set('x-request-id', requestId)
+  response.headers.set('x-original-pathname', pathname)
   return response
 }
 

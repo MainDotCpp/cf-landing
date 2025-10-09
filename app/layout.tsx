@@ -26,13 +26,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // 记录页面访问（异步执行，不阻塞渲染）
+  // 记录页面访问（使用 React cache 自动去重）
   const headersList = await headers()
-  const pathname = headersList.get('x-invoke-path') || headersList.get('x-original-url') || '/'
+  const requestId = headersList.get('x-request-id') || `fallback-${Date.now()}`
 
-  // 使用 Promise 异步记录，不等待完成
-  Promise.resolve().then(() => {
-    logPageView(pathname)
+  // 调用 cached 函数（同一 requestId 只会执行一次）
+  // 不使用 Promise 包装，直接调用以确保执行
+  logPageView(requestId).catch((error) => {
+    // 静默处理错误，不影响页面渲染
+    console.error('Log page view error:', error)
   })
 
   return (
