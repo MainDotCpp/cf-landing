@@ -52,20 +52,20 @@ export async function queryUrlConfig(host: string, path: string): Promise<Resolv
     where: { host_path: { host, path } },
   }).catch(() => null)
 
-  // 2. 如果没找到，尝试匹配通配符 host (*)
-  if (!row) {
-    row = await prisma.urlConfig.findUnique({
-      where: { host_path: { host: '*', path } },
-    }).catch(() => null)
-  }
+  // // 2. 如果没找到，尝试匹配通配符 host (*)
+  // if (!row) {
+  //   row = await prisma.urlConfig.findUnique({
+  //     where: { host_path: { host: '*', path } },
+  //   }).catch(() => null)
+  // }
 
-  // 3. 如果还没找到，尝试只用 path 查询（忽略 host）
-  if (!row) {
-    row = await prisma.urlConfig.findFirst({
-      where: { path },
-      orderBy: { updatedAt: 'desc' }, // 最近更新的优先
-    }).catch(() => null)
-  }
+  // // 3. 如果还没找到，尝试只用 path 查询（忽略 host）
+  // if (!row) {
+  //   row = await prisma.urlConfig.findFirst({
+  //     where: { path },
+  //     orderBy: { updatedAt: 'desc' }, // 最近更新的优先
+  //   }).catch(() => null)
+  // }
 
   if (!row)
     return null
