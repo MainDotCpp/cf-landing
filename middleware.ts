@@ -48,19 +48,28 @@ export async function middleware(request: NextRequest) {
     rule = LANGUAGE_CONFIG.otherPages
   }
 
-  const isMatch = rule === 'all' || isLanguageMatch(userLang, rule)
+    const isMatch = rule === 'all' || isLanguageMatch(userLang, rule)
 
-  // 记录日志
-  requestLogger.log({
-    timestamp: new Date().toISOString(),
-    path,
-    userLanguage: userLang,
-    allowedLanguages: Array.isArray(rule) ? rule.join(',') : 'all',
-    isBlocked: !isMatch,
-    userAgent: request.headers.get('user-agent') || undefined,
-    referer: request.headers.get('referer') || undefined,
-    ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
-  })
+    const logData = {
+      timestamp: new Date().toISOString(),
+      path,
+      userLanguage: userLang,
+      allowedLanguages: Array.isArray(rule) ? rule.join(',') : 'all',
+      isBlocked: !isMatch,
+      userAgent: request.headers.get('user-agent') || undefined,
+      referer: request.headers.get('referer') || undefined,
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+    }
+
+    // 记录到内存
+    requestLogger.log(logData)
+
+    // 异步持久化到文件（不阻塞响应）
+    fetch(`${request.nextUrl.origin}/api/log-persist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logData),
+    }).catch(() => {}) // 忽略错误，避免影响主流程
 
   if (rule === 'all') {
     return NextResponse.next()

@@ -24,6 +24,7 @@ export default function ConfigPage() {
 
   // 当配置加载完成后，初始化表单数据
   useEffect(() => {
+    // 即使配置不存在，API 也会返回 host 和 path，因此 config 应该总是存在
     if (config) {
       setFormData(config)
     }
@@ -68,10 +69,6 @@ export default function ConfigPage() {
     return <ErrorState error={error.message} onRetry={() => refetch()} />
   }
 
-  if (!config) {
-    return <ErrorState error="配置未找到" onRetry={() => refetch()} />
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -82,7 +79,7 @@ export default function ConfigPage() {
             <p className="text-slate-600">
               当前主机:
               {' '}
-              <code className="bg-slate-200 px-2 py-1 rounded">{config.host}</code>
+              <code className="bg-slate-200 px-2 py-1 rounded">{formData.host || config?.host || '加载中...'}</code>
             </p>
           </div>
           <Link href="/" className="text-sm text-blue-600 hover:text-blue-700">

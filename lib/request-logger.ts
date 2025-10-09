@@ -1,6 +1,6 @@
 /**
- * 请求日志记录器
- * 用于记录请求日志和语言拦截情况
+ * 请求日志记录器（内存版本）
+ * 用于 Edge Runtime 环境（middleware）
  */
 
 export interface RequestLog {
@@ -21,7 +21,7 @@ class RequestLogger {
   /**
    * 记录请求
    */
-  log(logData: RequestLog) {
+  log(logData: RequestLog, silent = false) {
     this.logs.push(logData)
 
     // 限制日志数量
@@ -30,7 +30,9 @@ class RequestLogger {
     }
 
     // 控制台输出
-    this.logToConsole(logData)
+    if (!silent) {
+      this.logToConsole(logData)
+    }
   }
 
   /**

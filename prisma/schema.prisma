@@ -24,3 +24,20 @@ model UrlConfig {
   @@unique([host, path])
   @@index([host, path])
 }
+
+model RequestLog {
+  id               String   @id @default(cuid())
+  timestamp        DateTime
+  path             String
+  userLanguage     String
+  allowedLanguages String
+  isBlocked        Boolean
+  userAgent        String?
+  referer          String?
+  ip               String?
+  createdAt        DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([path])
+  @@index([isBlocked])
+}

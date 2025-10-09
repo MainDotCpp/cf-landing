@@ -16,36 +16,24 @@ export async function GET(request: Request) {
       )
     }
 
-    let config = await queryUrlConfig(host, path)
+    const config = await queryUrlConfig(host, path)
 
-    // 如果配置不存在，自动创建一个默认配置
+    // 如果配置不存在，返回默认空配置（不写入数据库）
     if (!config) {
-      const newConfig = await prisma.urlConfig.create({
-        data: {
-          host,
-          path,
-          pageInternal: '/', // 默认显示首页
-          ctas: JSON.stringify({
-            primary: '#',
-            secondary: '#',
-          }),
-          analyticsSnippet: JSON.stringify({
-            headHtml: '',
-            bodyStartHtml: '',
-            bodyEndHtml: '',
-          }),
+      return NextResponse.json({
+        host,
+        path,
+        pageInternal: '/',
+        ctas: {
+          primary: '#',
+          secondary: '#',
+        },
+        analyticsSnippet: {
+          headHtml: '',
+          bodyStartHtml: '',
+          bodyEndHtml: '',
         },
       })
-
-      config = {
-        pageInternal: newConfig.pageInternal,
-        ctas: typeof newConfig.ctas === 'string'
-          ? JSON.parse(newConfig.ctas)
-          : newConfig.ctas,
-        analyticsSnippet: typeof newConfig.analyticsSnippet === 'string'
-          ? JSON.parse(newConfig.analyticsSnippet)
-          : newConfig.analyticsSnippet,
-      }
     }
 
     return NextResponse.json({
@@ -83,15 +71,22 @@ export async function POST(request: NextRequest) {
     }
     const { pageInternal, ctas, analyticsSnippet } = body
 
-    // 更新配置
-    const updatedConfig = await prisma.urlConfig.update({
+    // 使用 upsert：如果配置不存在则创建，否则更新
+    const updatedConfig = await prisma.urlConfig.upsert({
       where: {
         host_path: {
           host,
           path,
         },
       },
-      data: {
+      update: {
+        pageInternal,
+        ctas: JSON.stringify(ctas),
+        analyticsSnippet: JSON.stringify(analyticsSnippet),
+      },
+      create: {
+        host,
+        path,
         pageInternal,
         ctas: JSON.stringify(ctas),
         analyticsSnippet: JSON.stringify(analyticsSnippet),

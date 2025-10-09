@@ -59,44 +59,8 @@ export async function getCachedUrlConfig(customPath?: string): Promise<ResolvedU
   if (!host)
     return null
 
-  let config = await queryUrlConfig(host, path)
+  const config = await queryUrlConfig(host, path)
 
-  // 如果配置不存在，创建一个默认配置
-  if (!config) {
-    try {
-      const newConfig = await prisma.urlConfig.create({
-        data: {
-          host,
-          path,
-          pageInternal: '/', // 默认显示首页
-          ctas: JSON.stringify({
-            primary: '#',
-            secondary: '#',
-          }),
-          analyticsSnippet: JSON.stringify({
-            headHtml: '',
-            bodyStartHtml: '',
-            bodyEndHtml: '',
-          }),
-        },
-      })
-
-      config = {
-        pageInternal: newConfig.pageInternal,
-        ctas: (newConfig.ctas as any) ?? undefined,
-        analyticsSnippet: (newConfig.analyticsSnippet as any) ?? undefined,
-      }
-    }
-    catch (error) {
-      console.error('Error creating default config:', error)
-      // 如果创建失败，返回一个默认配置对象
-      return {
-        pageInternal: '/',
-        ctas: { primary: '#', secondary: '#' },
-        analyticsSnippet: { headHtml: '', bodyStartHtml: '', bodyEndHtml: '' },
-      }
-    }
-  }
-
+  // 如果配置不存在，返回 null（不自动创建）
   return config
 }
