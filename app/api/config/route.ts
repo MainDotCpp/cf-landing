@@ -81,15 +81,15 @@ export async function POST(request: NextRequest) {
       },
       update: {
         pageInternal,
-        ctas: JSON.stringify(ctas),
-        analyticsSnippet: JSON.stringify(analyticsSnippet),
+        ctas, // Prisma Json 类型自动处理序列化
+        analyticsSnippet, // Prisma Json 类型自动处理序列化
       },
       create: {
         host,
         path,
         pageInternal,
-        ctas: JSON.stringify(ctas),
-        analyticsSnippet: JSON.stringify(analyticsSnippet),
+        ctas, // Prisma Json 类型自动处理序列化
+        analyticsSnippet, // Prisma Json 类型自动处理序列化
       },
     })
 
@@ -98,12 +98,8 @@ export async function POST(request: NextRequest) {
       host: updatedConfig.host,
       path: updatedConfig.path,
       pageInternal: updatedConfig.pageInternal,
-      ctas: typeof updatedConfig.ctas === 'string'
-        ? JSON.parse(updatedConfig.ctas)
-        : updatedConfig.ctas,
-      analyticsSnippet: typeof updatedConfig.analyticsSnippet === 'string'
-        ? JSON.parse(updatedConfig.analyticsSnippet)
-        : updatedConfig.analyticsSnippet,
+      ctas: updatedConfig.ctas, // Prisma Json 类型已自动反序列化
+      analyticsSnippet: updatedConfig.analyticsSnippet, // Prisma Json 类型已自动反序列化
     }
 
     return NextResponse.json(response)
