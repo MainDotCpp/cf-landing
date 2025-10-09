@@ -30,10 +30,16 @@ export async function middleware(request: NextRequest) {
   const userAgent = request.headers.get('user-agent') || ''
 
   // 提取请求信息
-  const host = request.nextUrl.host
-  const url = request.url
+  // 获取真实 host（优先使用代理传递的 host）
+  const realHost = request.headers.get('x-forwarded-host')
+    || request.headers.get('host')
+    || request.nextUrl.host
+
   const method = request.method
-  const protocol = request.nextUrl.protocol
+  const protocol = request.nextUrl.protocol.replace(':', '')
+
+  // 构建完整 URL（使用真实 host）
+  const fullUrl = `${protocol}://${realHost}${pathname}${request.nextUrl.search}`
 
   // 检测是否为 Google bot
   const googleCheck = isGoogleBot(ip, userAgent)
@@ -55,8 +61,8 @@ export async function middleware(request: NextRequest) {
     response.headers.set('x-original-pathname', pathname)
 
     // 传递请求详情
-    response.headers.set('x-request-host', host)
-    response.headers.set('x-request-url', url)
+    response.headers.set('x-request-host', realHost)
+    response.headers.set('x-request-url', fullUrl)
     response.headers.set('x-request-method', method)
     response.headers.set('x-request-protocol', protocol)
 
@@ -85,8 +91,8 @@ export async function middleware(request: NextRequest) {
   response.headers.set('x-original-pathname', pathname)
 
   // 传递请求详情
-  response.headers.set('x-request-host', host)
-  response.headers.set('x-request-url', url)
+  response.headers.set('x-request-host', realHost)
+  response.headers.set('x-request-url', fullUrl)
   response.headers.set('x-request-method', method)
   response.headers.set('x-request-protocol', protocol)
 
