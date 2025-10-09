@@ -3,7 +3,6 @@ import type { SupportedLanguage } from '@/lib/language'
 
 import { NextResponse } from 'next/server'
 import { getLanguageFromHeaders, isLanguageMatch, normalizeLanguage } from '@/lib/language'
-import { requestLogger } from '@/lib/request-logger'
 
 // 语言配置
 const LANGUAGE_CONFIG = {
@@ -48,42 +47,33 @@ export async function middleware(request: NextRequest) {
     rule = LANGUAGE_CONFIG.otherPages
   }
 
-    const isMatch = rule === 'all' || isLanguageMatch(userLang, rule)
+  const isMatch = rule === 'all' || isLanguageMatch(userLang, rule)
+  const allowedLanguages = Array.isArray(rule) ? rule.join(',') : 'all'
 
-    const logData = {
-      timestamp: new Date().toISOString(),
-      path,
-      userLanguage: userLang,
-      allowedLanguages: Array.isArray(rule) ? rule.join(',') : 'all',
-      isBlocked: !isMatch,
-      userAgent: request.headers.get('user-agent') || undefined,
-      referer: request.headers.get('referer') || undefined,
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
-    }
-
-    // 记录到内存
-    requestLogger.log(logData)
-
-    // 异步持久化到数据库（不阻塞响应）
-    fetch(`${request.nextUrl.origin}/api/log-persist`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(logData),
-    }).catch((error) => {
-      console.error('Failed to persist log to database:', error)
-    })
-
+  // 如果允许所有语言，直接放行并设置 header
   if (rule === 'all') {
-    return NextResponse.next()
+    const response = NextResponse.next()
+    response.headers.set('x-language-blocked', 'false')
+    response.headers.set('x-allowed-languages', allowedLanguages)
+    return response
   }
 
+  // 如果语言不匹配，重定向到首页并标记为阻塞
   if (!isMatch) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
-    return NextResponse.rewrite(url)
+    const response = NextResponse.rewrite(url)
+    response.headers.set('x-language-blocked', 'true')
+    response.headers.set('x-allowed-languages', allowedLanguages)
+    response.headers.set('x-original-path', path)
+    return response
   }
 
-  return NextResponse.next()
+  // 语言匹配，允许访问
+  const response = NextResponse.next()
+  response.headers.set('x-language-blocked', 'false')
+  response.headers.set('x-allowed-languages', allowedLanguages)
+  return response
 }
 
 export const config = {
