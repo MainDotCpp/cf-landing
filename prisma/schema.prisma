@@ -39,9 +39,43 @@ model RequestLog {
   referer          String?
   ip               String?
   createdAt        DateTime @default(now())
+  
+  // 基础请求信息
+  host             String?
+  url              String?
+  method           String?  @default("GET")
+  protocol         String?
+  queryParams      String?  // JSON 格式的查询参数
+  
+  // UTM 追踪参数
+  utmSource        String?
+  utmMedium        String?
+  utmCampaign      String?
+  utmTerm          String?
+  utmContent       String?
+  
+  // 设备与浏览器信息
+  deviceType       String?  // mobile/desktop/tablet/bot
+  browser          String?
+  browserVersion   String?
+  os               String?
+  osVersion        String?
+  
+  // 地理位置信息（来自 Cloudflare headers）
+  country          String?  // cf-ipcountry
+  city             String?  // cf-ipcity
+  region           String?  // cf-region
+  timezone         String?  // cf-timezone
+  
+  // 会话追踪
+  sessionId        String?
 
   @@index([timestamp])
   @@index([path])
   @@index([isBlocked])
   @@index([isGoogleBot])
+  @@index([host])
+  @@index([country])
+  @@index([utmSource])
+  @@index([deviceType])
 }

@@ -29,16 +29,22 @@ export async function middleware(request: NextRequest) {
   const ip = getRealIP(request.headers)
   const userAgent = request.headers.get('user-agent') || ''
 
+  // 提取请求信息
+  const host = request.nextUrl.host
+  const url = request.url
+  const method = request.method
+  const protocol = request.nextUrl.protocol
+
   // 检测是否为 Google bot
   const googleCheck = isGoogleBot(ip, userAgent)
   const shouldBlock = shouldBlockGoogle(googleCheck)
 
   // 如果需要屏蔽，重定向到首页
   if (shouldBlock) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/'
+    const rewriteUrl = request.nextUrl.clone()
+    rewriteUrl.pathname = '/'
 
-    const response = NextResponse.rewrite(url)
+    const response = NextResponse.rewrite(rewriteUrl)
     response.headers.set('x-blocked', 'true')
     response.headers.set('x-blocked-reason', 'google-bot')
     response.headers.set('x-is-google-bot', 'true')
@@ -47,6 +53,26 @@ export async function middleware(request: NextRequest) {
     response.headers.set('x-original-path', pathname)
     response.headers.set('x-request-id', requestId)
     response.headers.set('x-original-pathname', pathname)
+
+    // 传递请求详情
+    response.headers.set('x-request-host', host)
+    response.headers.set('x-request-url', url)
+    response.headers.set('x-request-method', method)
+    response.headers.set('x-request-protocol', protocol)
+
+    // 传递 Cloudflare 地理信息
+    const cfCountry = request.headers.get('cf-ipcountry')
+    const cfCity = request.headers.get('cf-ipcity')
+    const cfRegion = request.headers.get('cf-region')
+    const cfTimezone = request.headers.get('cf-timezone')
+    if (cfCountry)
+      response.headers.set('x-cf-country', cfCountry)
+    if (cfCity)
+      response.headers.set('x-cf-city', cfCity)
+    if (cfRegion)
+      response.headers.set('x-cf-region', cfRegion)
+    if (cfTimezone)
+      response.headers.set('x-cf-timezone', cfTimezone)
 
     return response
   }
@@ -57,6 +83,27 @@ export async function middleware(request: NextRequest) {
   response.headers.set('x-is-google-bot', 'false')
   response.headers.set('x-request-id', requestId)
   response.headers.set('x-original-pathname', pathname)
+
+  // 传递请求详情
+  response.headers.set('x-request-host', host)
+  response.headers.set('x-request-url', url)
+  response.headers.set('x-request-method', method)
+  response.headers.set('x-request-protocol', protocol)
+
+  // 传递 Cloudflare 地理信息
+  const cfCountry = request.headers.get('cf-ipcountry')
+  const cfCity = request.headers.get('cf-ipcity')
+  const cfRegion = request.headers.get('cf-region')
+  const cfTimezone = request.headers.get('cf-timezone')
+  if (cfCountry)
+    response.headers.set('x-cf-country', cfCountry)
+  if (cfCity)
+    response.headers.set('x-cf-city', cfCity)
+  if (cfRegion)
+    response.headers.set('x-cf-region', cfRegion)
+  if (cfTimezone)
+    response.headers.set('x-cf-timezone', cfTimezone)
+
   return response
 }
 
