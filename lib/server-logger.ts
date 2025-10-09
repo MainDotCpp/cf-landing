@@ -10,27 +10,31 @@ import { prisma } from './prisma'
 /**
  * 记录页面访问
  * @param path 访问路径
- * @param isBlocked 是否被语言过滤阻塞
- * @param allowedLanguages 允许的语言列表
  */
-export async function logPageView(
-  path: string,
-  isBlocked: boolean,
-  allowedLanguages: string,
-) {
+export async function logPageView(path: string) {
   try {
     const headersList = await headers()
     const userLang = normalizeLanguage(
       getLanguageFromHeaders(headersList.get('accept-language')),
     )
 
+    // 从 middleware 设置的 headers 中读取屏蔽信息
+    const isBlocked = headersList.get('x-blocked') === 'true'
+    const blockReason = headersList.get('x-block-reason') || null
+    const isGoogleBot = headersList.get('x-is-google-bot') === 'true'
+    const botVerified = headersList.get('x-bot-verified') === 'true'
+    const originalPath = headersList.get('x-original-path') || path
+
     await prisma.requestLog.create({
       data: {
         timestamp: new Date(),
-        path,
+        path: originalPath,
         userLanguage: userLang,
-        allowedLanguages,
+        allowedLanguages: isBlocked ? 'none' : 'all',
         isBlocked,
+        isGoogleBot,
+        botVerified,
+        blockReason,
         userAgent: headersList.get('user-agent') || undefined,
         referer: headersList.get('referer') || undefined,
         ip:
@@ -39,17 +43,9 @@ export async function logPageView(
           || undefined,
       },
     })
-
-    // 可选：控制台输出
-    if (isBlocked) {
-      console.log(
-        `🚫 [BLOCKED] ${new Date().toISOString()} | ${path} | User: ${userLang} | Allowed: ${allowedLanguages}`,
-      )
-    }
   }
   catch (error) {
     // 记录失败不应该影响页面渲染
     console.error('Failed to log page view:', error)
   }
 }
-

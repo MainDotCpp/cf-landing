@@ -29,13 +29,10 @@ export default async function RootLayout({
   // 记录页面访问（异步执行，不阻塞渲染）
   const headersList = await headers()
   const pathname = headersList.get('x-invoke-path') || headersList.get('x-original-url') || '/'
-  const isBlocked = headersList.get('x-language-blocked') === 'true'
-  const allowedLanguages = headersList.get('x-allowed-languages') || 'all'
-  const originalPath = headersList.get('x-original-path') || pathname
 
   // 使用 Promise 异步记录，不等待完成
   Promise.resolve().then(() => {
-    logPageView(originalPath, isBlocked, allowedLanguages)
+    logPageView(pathname)
   })
 
   return (

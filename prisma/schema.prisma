@@ -32,6 +32,9 @@ model RequestLog {
   userLanguage     String
   allowedLanguages String
   isBlocked        Boolean
+  isGoogleBot      Boolean  @default(false)
+  botVerified      Boolean  @default(false)
+  blockReason      String?
   userAgent        String?
   referer          String?
   ip               String?
@@ -40,4 +43,5 @@ model RequestLog {
   @@index([timestamp])
   @@index([path])
   @@index([isBlocked])
+  @@index([isGoogleBot])
 }
