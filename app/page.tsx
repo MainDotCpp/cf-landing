@@ -1,5 +1,5 @@
 // 导入其他页面组件
-import ConfigPage from '@/app/config/ConfigPage'
+import ConfigPage from '@/app/(pages)/(common)/config/ConfigPage'
 
 // 导入默认首页组件
 import { EducationSection } from '@/components/education-section'

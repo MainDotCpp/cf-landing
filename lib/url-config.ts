@@ -34,8 +34,13 @@ export async function getNormalizedHostAndPath(customPath?: string): Promise<{ h
   }
 
   // Build a URL from headers; query/hash are ignored by design
+  // 优先使用原始路径（用户实际访问的路径），而不是内部重写后的路径
   const proto = (h.get('x-forwarded-proto') ?? 'https').split(',')[0]
-  const nextUrl = h.get('x-invoke-path') ?? h.get('x-original-url') ?? h.get('x-rewrite-url') ?? '/'
+  const nextUrl = h.get('x-original-pathname')
+    ?? h.get('x-invoke-path')
+    ?? h.get('x-original-url')
+    ?? h.get('x-rewrite-url')
+    ?? '/'
   const url = new URL(`${proto}://${host}${nextUrl}`)
   const path = normalizePath(url.pathname)
   return { host, path }
