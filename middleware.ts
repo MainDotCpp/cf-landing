@@ -64,12 +64,14 @@ export async function middleware(request: NextRequest) {
     // 记录到内存
     requestLogger.log(logData)
 
-    // 异步持久化到文件（不阻塞响应）
+    // 异步持久化到数据库（不阻塞响应）
     fetch(`${request.nextUrl.origin}/api/log-persist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(logData),
-    }).catch(() => {}) // 忽略错误，避免影响主流程
+    }).catch((error) => {
+      console.error('Failed to persist log to database:', error)
+    })
 
   if (rule === 'all') {
     return NextResponse.next()
