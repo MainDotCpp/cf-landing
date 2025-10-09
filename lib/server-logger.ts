@@ -38,9 +38,7 @@ async function logPageViewInternal(_requestId: string) {
         blockReason,
         userAgent: headersList.get('user-agent') || undefined,
         referer: headersList.get('referer') || undefined,
-        ip:
-          headersList.get('x-forwarded-for')
-          || headersList.get('x-real-ip')
+        ip: headersList.get('x-real-ip')
           || undefined,
       },
     })

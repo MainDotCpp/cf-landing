@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
   const requestId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
 
   // 获取访问者信息
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
+  const ip = request.headers.get('x-real-ip')
   const userAgent = request.headers.get('user-agent') || ''
 
   // 检测是否为 Google bot

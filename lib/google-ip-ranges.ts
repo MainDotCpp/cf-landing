@@ -354,6 +354,7 @@ export const GOOGLE_USER_AGENTS = [
   'Google-AdWords', // AdWords 广告系统
   'Google-Adwords', // AdWords 小写变体
   'AdWords-Express', // AdWords Express
+  'Google-Ads-Creatives-Assistant', // AdWords 创意助手
 ]
 
 /**
